@@ -24,7 +24,7 @@ int main(int argc, char *argv[]) {
 	addrServer.sin_addr.s_addr = inet_addr(argv[1]);
 	
 	printf("Adresse IP : %s\n : %x\n" , inet_ntoa(addrServer.sin_addr)  , ntohl(addrServer.sin_addr.s_addr ) )  ;
-					/*ntoa  -> network to addresse */   /*ntoh  -> network to host */
+					/*ntoa  -> network to addresse */  					/*ntoh  -> network to host */
 	printf("\nNumero de port %d  : %d "  , ntohs(addrServer.sin_port ) , addrServer.sin_port );
 	
 	

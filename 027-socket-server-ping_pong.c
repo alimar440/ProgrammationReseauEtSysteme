@@ -9,6 +9,7 @@
 #include <stdlib.h>
 #include <sys/types.h>          /* See NOTES */
 #include <sys/socket.h>
+#include <unistd.h> 
 
 //pour tester : nc 0.0.0.0 port
 
@@ -80,26 +81,38 @@ int main(int argc, char *argv[]) {
 	printf("Connexion du client %s:%d reussie\n", inet_ntoa(addrClient.sin_addr), ntohs(addrClient.sin_port));
 	
 	char buffReceive[10];
-	char buffSend[10] = "pong";
+	char buffSend[] = "Ping";
 
 	int nbRcv;
 	int nbSend;
+	int i = 0 ;
+	
+	
+	while(1){
+		//envoyer ping
+		
+		nbSend = send(socketClientDistant, buffSend, strlen(buffSend) , 0);
+		printf("[Server# %d] (Serveur) %s:%d --> %s : %d  %d \n", i, 
+								          inet_ntoa(addrServer.sin_addr), ntohs(addrServer.sin_port) ,
+								          inet_ntoa(addrClient.sin_addr), ntohs(addrClient.sin_port), 
+								          buffSend);
+		sleep(1);
+       
+		
+		//recevoir ping
+		
+		memset(buffReceive , 0 ,10) ;
+		nbRcv = recv(socketClientDistant, buffReceive, 5*sizeof(char), 0);
+		printf("[Server# %d] %s:%d --> %s : %d  (Serveur)  %s\n", i ,
+					                inet_ntoa(addrClient.sin_addr), ntohs(addrClient.sin_port), 
+							inet_ntoa(addrServer.sin_addr), ntohs(addrServer.sin_port) ,
+							buffReceive);
+       
+		i++ ;
+	}
+	
 
 	
-	//envoyer ping
-	
-	nbSend = send(socketClientDistant, buffSend, 5*sizeof(char), 0);
-	sleep(1);
-	printf("Envoie de ping \n") ;
-	
-	//recevoir ping
-	
-	memset(buffReceive , 0 ,10) ;
-	nbRcv = recv(socketClientDistant, buffReceive, 5*sizeof(char), 0);
-	printf("Donnee recu : %s \n",buffReceive) ;
-	
-
-	
-	      
+	close(socketClientDistant)  ;    
      	return 0 ;
 }
